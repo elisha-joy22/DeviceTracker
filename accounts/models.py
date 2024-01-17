@@ -49,3 +49,6 @@ class CustomUser(models.Model):
 
     def __str__(self):
         return self.name
+
+    def is_active(self):
+        return True

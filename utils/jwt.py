@@ -29,21 +29,21 @@ def set_jwt_cookie(response, jwt_token):
     return response
 
 
-def authenticate_jwt(request):
+def decode_jwt(token):
     jwt_secret = os.getenv('JWT_SECRET_KEY')
     jwt_algorithm = os.getenv('JWT_ALGORITHM')
-
-    auth_token = request.COOKIES.get('auth_token') 
-    print('provided_jwt',auth_token)
-
-    if auth_token is None:
-        return None       # No authentication header present
-    print('po mone po')
+    
     try:
-        payload = jwt.decode(auth_token, jwt_secret, algorithms=[jwt_algorithm])
+        payload = jwt.decode(
+            token,
+            jwt_secret,
+            algorithms=[jwt_algorithm]
+        )
+        return payload
     except (ValueError, jwt.ExpiredSignatureError, jwt.DecodeError):
         raise exceptions.AuthenticationFailed('Invalid or expired token')
 
+    return
     user_email = payload.get('user')
     user = CustomUser.objects.get(email=user_email) 
     return user if user else None

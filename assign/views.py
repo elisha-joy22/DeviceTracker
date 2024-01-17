@@ -3,13 +3,15 @@ from django.shortcuts import render
 from rest_framework.viewsets import GenericViewSet,ViewSet
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import action
 
 from assign.models import AssignLog
 from assign.serializer import AssignSerializer,AssignLogSerializer
 from device.models import Device
+from accounts.mixins import TokenAuthRequiredMixin
 
 # Create your views here.
-class AssignViewSet(GenericViewSet):
+class AssignViewSet(TokenAuthRequiredMixin,GenericViewSet):
     queryset = AssignLog.objects.all()
     serializer_class = AssignLogSerializer
     
@@ -36,4 +38,10 @@ class AssignViewSet(GenericViewSet):
         return Response({'success':'log_deleted'},status=status.HTTP_204_NO_CONTENT)
 
 
-
+    @action(detail=False,methods=['get'])
+    def user_device_log(self,request):
+        user_log = AssignLog.objects.filter(
+            user=request.user
+        )
+        serialised_user_log = AssignLogSerializer(user_log,many=True)
+        return Response({'data':serialised_user_log.data})

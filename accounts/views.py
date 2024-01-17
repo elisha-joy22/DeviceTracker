@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+
 
 from slack_sdk.oauth import AuthorizeUrlGenerator
 from slack_sdk.oauth.state_store import FileOAuthStateStore
@@ -12,6 +15,7 @@ from dotenv import load_dotenv
 from utils.accounts import create_user_info,update_or_create_user
 from utils.jwt import generate_jwt,set_jwt_cookie
 from accounts.serializers import UserSerializer
+from accounts.mixins import TokenAuthRequiredMixin
 
 # Create your views here.
 load_dotenv()
@@ -34,6 +38,7 @@ authorize_url_generator = AuthorizeUrlGenerator(
 # Create your views here.
 class SlackOuthStartView(APIView):
     def get(self,request):
+        print("User",request.user)
         state = state_store.issue()
         url = authorize_url_generator.generate(state=state)
         return Response({'url':url})
@@ -41,6 +46,7 @@ class SlackOuthStartView(APIView):
 
 class SlackOuthRedirectView(APIView):
     def get(self,request):
+        print("User",request.user)
         code = request.GET.get('code')
         state = request.GET.get('state')
         error = request.GET.get('error')
@@ -87,9 +93,10 @@ class SlackOuthRedirectView(APIView):
     
 
 
-class UserProfileView(APIView):
+class UserProfileView(TokenAuthRequiredMixin,APIView):
     def get(self,request):
-        user = request.custom_user
-        print(user)
-        return Response({"User-profile":user})
-    
+        print("User in Profile view",request.user)
+        user = request.user
+        print(request.user.slack_id)
+        serialised_user = UserSerializer(user)
+        return Response({"User-profile":serialised_user.data})

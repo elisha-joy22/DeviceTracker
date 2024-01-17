@@ -10,12 +10,13 @@ from rest_framework.decorators import action
 from device.models import Device
 from assign.models import AssignLog
 from accounts.models import CustomUser
+from accounts.mixins import TokenAuthRequiredMixin
 from device.serializer import DeviceSerializer,DeviceLogSerializer
 from assign.serializer import AssignLogSerializer
 
 
 # Create your views here.
-class DeviceViewset(ModelViewSet):
+class DeviceViewset(TokenAuthRequiredMixin,ModelViewSet):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
 
@@ -29,20 +30,19 @@ class DeviceViewset(ModelViewSet):
 
     
 
-class DeviceActionViewSet(ViewSet):
+class DeviceActionViewSet(TokenAuthRequiredMixin,ViewSet):
     queryset = Device.objects.all()
     
     #take device user_id must be request.id
     @action(detail=False, methods=['post'])
     def take_device(self, request):
-        data = request.data
-        device_id = data.get('device')
-        user_id = data.get('user')
+        device_id = request.data.get('device')
+        user_id = request.user.slack_id
 
         device_instance = get_object_or_404(Device, id=device_id)
         user_instance = get_object_or_404(CustomUser, slack_id=user_id)
 
-        if device_instance.status == 'available' and not device_instance.user_id:
+        if device_instance.status == 'available':
             device_instance.user_id = user_id
             device_instance.status = 'in_use'
             device_instance.save()
@@ -68,10 +68,8 @@ class DeviceActionViewSet(ViewSet):
     #must implement req.user==user_id then only permit to return device
     @action(detail=False,methods=['post'])
     def return_device(self, request):
-        data = request.data
-        device_id = data.get('device')
-        user_id = data.get('user')
-
+        device_id = request.data.get('device')
+        user_id = request.user.slack_id
         device_instance = get_object_or_404(Device, id=device_id)
 
         if device_instance.user_id == user_id:
@@ -105,12 +103,11 @@ class DeviceActionViewSet(ViewSet):
             )
 
 
-class UserDevicesViewSet(ViewSet):
+class UserDevicesViewSet(TokenAuthRequiredMixin,ViewSet):
     queryset = Device.objects.all()
 
     def list(self,request):
         print("list")
-        request.user = request.data['user']
         queryset = Device.objects.filter(user=request.user)
         serializer = DeviceSerializer(queryset,many=True)
         print("user-device-list")
@@ -119,8 +116,6 @@ class UserDevicesViewSet(ViewSet):
     @action(detail=False,methods=['get'])
     def history(self,request,user=None):
         print("history")
-        request.user = request.query_params['user']
-        print(request.user)
         queryset = AssignLog.objects.filter(user_id=request.user)\
                     .order_by('-returned_at')[:10]\
                     .values_list(

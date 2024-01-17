@@ -20,8 +20,8 @@ SECRET_KEY = 'django-insecure-si-2l1axlzz*nn-%wn7ydvgp_h1mvj-^3bm53eo)blfzclo87z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["ef8d-103-141-56-118.ngrok-free.app",'127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://ef8d-103-141-56-118.ngrok-free.app','http://127.0.0.1:3000']
+ALLOWED_HOSTS = ["4eb0-103-141-56-118.ngrok-free.app",'127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['http://4eb0-103-141-56-118.ngrok-free.app','http://127.0.0.1:3000']
 CORS_ALLOWED_ORIGINS = ['http://localhost:3000']
 CORS_ALLOW_CREDENTIALS = True
 
@@ -48,6 +48,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'accounts.middlewares.JWTAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -129,3 +130,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+AUTHENTICATION_BACKENDS = [
+    'accounts.auth_backends.CustomBackend.TokenBackend',
+    #'django.contrib.auth.backends.ModelBackend',
+]
