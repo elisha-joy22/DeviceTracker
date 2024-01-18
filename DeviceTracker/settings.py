@@ -18,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-si-2l1axlzz*nn-%wn7ydvgp_h1mvj-^3bm53eo)blfzclo87z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG',False).lower()=='true'
 
 ALLOWED_HOSTS = ["4eb0-103-141-56-118.ngrok-free.app",'127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['https://4eb0-103-141-56-118.ngrok-free.app']
