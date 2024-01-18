@@ -1,9 +1,4 @@
 .env
 venv
-<<<<<<< Updated upstream
-**__pycache__/
-**migrations/
-=======
 /__pycache__/
 /migrations/
->>>>>>> Stashed changes
