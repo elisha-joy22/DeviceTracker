@@ -10,7 +10,7 @@ class CustomUser(models.Model):
         ('admin','Admin')
     ]
 
-    slack_id = models.CharField(max_length=100,unique=True, db_index=True,primary_key=True)
+    slack_id = models.CharField(max_length=100,unique=True, db_index=True)
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=100,choices=ROLE_CHOICES,null=True,blank=True)
@@ -19,3 +19,6 @@ class CustomUser(models.Model):
     def save(self, *args, **kwargs):
         if self.picture_url.endswith(".jpg"):
             super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
