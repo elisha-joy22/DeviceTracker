@@ -1,8 +1,9 @@
-
 from pathlib import Path
+import os
 from dotenv import load_dotenv
 
-import os
+import dj_database_url
+
 
 load_dotenv()
 
@@ -85,6 +86,7 @@ WSGI_APPLICATION = 'DeviceTracker.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.postgresql',
@@ -94,6 +96,12 @@ DATABASES = {
         'PORT': os.environ.get('DB_PORT'),
     }
 }
+
+DATABASES['default'] = dj_database_url.config(
+    default=os.environ.get("DB_URL"),
+    conn_max_age=600
+)
+
 
 
 # Password validation
