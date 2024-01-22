@@ -9,7 +9,7 @@ def update_or_create_user(user):
                                         defaults=user
                                     )
     except CustomUser.DoesNotExist:
-        return {'error':'User creation falied!!'}
+        print ("{'error':'User creation falied!!'}")
     
     return returned_user
 

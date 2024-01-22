@@ -19,11 +19,18 @@ SECRET_KEY = 'django-insecure-si-2l1axlzz*nn-%wn7ydvgp_h1mvj-^3bm53eo)blfzclo87z
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG',False).lower()=='true'
+ENV = os.environ.get('ENV','')
 
-ALLOWED_HOSTS = ["device-tracker.onrender.com"]
-CSRF_TRUSTED_ORIGINS = []
-CORS_ALLOWED_ORIGINS = ['http://localhost:3000']
-CORS_ALLOW_CREDENTIALS = True
+if ENV.lower().startswith('prod'):
+    ALLOWED_HOSTS = ["device-tracker.onrender.com"]
+    CSRF_TRUSTED_ORIGINS = []
+    CORS_ALLOWED_ORIGINS = []
+    CORS_ALLOW_CREDENTIALS = True
+else:
+    ALLOWED_HOSTS = ["127.0.0.1","801e-103-141-56-118.ngrok-free.app"]
+    CSRF_TRUSTED_ORIGINS = []
+    CORS_ALLOWED_ORIGINS = []
+    CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 

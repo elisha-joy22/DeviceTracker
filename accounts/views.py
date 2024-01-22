@@ -20,9 +20,13 @@ from accounts.mixins import TokenAuthRequiredMixin
 # Create your views here.
 load_dotenv()
 
+ENV = os.getenv("ENV")
 SLACK_CLIENT_ID = os.getenv("SLACK_CLIENT_ID", "")
 SLACK_CLIENT_SECRET = os.getenv("SLACK_CLIENT_SECRET", "")
-SLACK_REDIRECT_URI_TEST = os.getenv("SLACK_REDIRECT_URI_TEST", "")
+SLACK_REDIRECT_URI = os.getenv("SLACK_REDIRECT_URI_DEV", "")
+
+if ENV.lower().startswith("prod"):
+    SLACK_REDIRECT_URI = os.getenv("SLACK_REDIRECT_URI_PROD", "")
 
 scopes = ["openid","email","profile"]
 
@@ -31,14 +35,14 @@ state_store = FileOAuthStateStore(expiration_seconds=300)
 authorize_url_generator = AuthorizeUrlGenerator(
     client_id=SLACK_CLIENT_ID,
     user_scopes=scopes,
-    redirect_uri=SLACK_REDIRECT_URI_TEST
+    redirect_uri=SLACK_REDIRECT_URI
 )
 
 
 # Create your views here.
 class SlackOuthStartView(APIView):
     def get(self,request):
-        print("User",request.user)
+        print("StartView User",request.user)
         state = state_store.issue()
         url = authorize_url_generator.generate(state=state)
         return Response({'url':url})
@@ -65,7 +69,7 @@ class SlackOuthRedirectView(APIView):
             auth_grand_response = WebClient().openid_connect_token(
                                                 client_id=SLACK_CLIENT_ID,
                                                 client_secret=SLACK_CLIENT_SECRET,
-                                                redirect_uri=SLACK_REDIRECT_URI_TEST,
+                                                redirect_uri=SLACK_REDIRECT_URI,
                                                 code=code
                                             )
             access_token = auth_grand_response.get('access_token')
