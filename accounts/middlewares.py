@@ -18,7 +18,7 @@ class JWTAuthenticationMiddleware(MiddlewareMixin):
         print("INside jwt middleware")
         token = request.COOKIES.get("auth_token")
         user = TokenBackend().authenticate(request,token=token)
-        print("user exists",user)
+        print("user exists?",user)
         print(request.user)
         request.user = SimpleLazyObject(
                             lambda: user if user else get_user(request)

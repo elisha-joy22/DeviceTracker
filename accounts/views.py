@@ -50,7 +50,7 @@ class SlackOuthStartView(APIView):
 
 class SlackOuthRedirectView(APIView):
     def get(self,request):
-        print("User",request.user)
+        print("RedirectView User",request.user)
         code = request.GET.get('code')
         state = request.GET.get('state')
         error = request.GET.get('error')
