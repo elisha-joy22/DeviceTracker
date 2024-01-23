@@ -35,6 +35,7 @@ else:
 # Application definition
 
 INSTALLED_APPS = [
+    'unfold',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -145,3 +146,4 @@ AUTHENTICATION_BACKENDS = [
     'accounts.auth_backends.CustomBackend.TokenBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
+

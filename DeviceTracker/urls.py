@@ -10,3 +10,9 @@ urlpatterns = [
     path('device/', include('device.urls')),
     path('assign/', include('assign.urls')),
 ]
+
+
+from django.contrib import admin
+admin.site.site_header = 'DeviceTracker Admin'           # default: "Django Administration"
+admin.site.index_title = 'Control Panel'                 # default: "Site administration"
+admin.site.site_title = 'DeviceTracker Admin' 
