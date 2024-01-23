@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from assign.models import AssignLog
+
+admin.site.register(AssignLog)
