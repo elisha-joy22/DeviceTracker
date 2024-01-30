@@ -2,8 +2,6 @@ from django.contrib.auth.backends import BaseBackend
 from django.shortcuts import get_object_or_404
 
 from dotenv import load_dotenv
-import jwt
-import os
 
 from accounts.models import CustomUser
 from utils.jwt import decode_jwt
