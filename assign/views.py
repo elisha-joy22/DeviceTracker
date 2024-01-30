@@ -1,14 +1,12 @@
-from django.shortcuts import render
-
-from rest_framework.viewsets import GenericViewSet,ViewSet
+from rest_framework.viewsets import GenericViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
 
 from assign.models import AssignLog
-from assign.serializer import AssignSerializer,AssignLogSerializer
-from device.models import Device
+from assign.serializer import AssignLogSerializer
 from accounts.mixins import TokenAuthRequiredMixin
+
 
 # Create your views here.
 class AssignViewSet(TokenAuthRequiredMixin,GenericViewSet):

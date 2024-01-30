@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand
-from django.contrib import admin
 from django.contrib.auth.models import User
 from dotenv import load_dotenv
 import os
@@ -11,7 +10,7 @@ class Command(BaseCommand):
     help = 'Prints'
     def handle(self,*args,**kwargs):
         create_superuser_default()  
-        change_admin_attr()
+
 
 
 def create_superuser_default():
@@ -35,9 +34,3 @@ def create_superuser_default():
         except Exception as e:
             print("error:",e)
 
-
-def change_admin_attr():
-    admin.site.site_header = 'DeviceTracker Admin'           # default: "Django Administration"
-    admin.site.index_title = 'Control Panel'                 # default: "Site administration"
-    admin.site.site_title = 'DeviceTracker Admin'
-    print("Admin attrs changed")

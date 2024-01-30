@@ -10,6 +10,3 @@ router.register(r'device_action',DeviceActionViewSet,basename='device_action')
 
 urlpatterns = router.urls
 
-#urlpatterns = [
-#    path('',include(router.urls)),
-#]

@@ -5,5 +5,3 @@ class AssignConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'assign'
 
-    #def ready(self):
-        #import assign.signals

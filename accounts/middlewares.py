@@ -4,8 +4,6 @@ from django.contrib.auth.models import AnonymousUser, User
 from django.contrib.auth.middleware import get_user
 
 from dotenv import load_dotenv
-import jwt
-import os
 
 from accounts.models import CustomUser 
 from accounts.auth_backends.CustomBackend import TokenBackend

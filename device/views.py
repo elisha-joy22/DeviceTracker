@@ -2,7 +2,6 @@ from django.shortcuts import render,get_object_or_404
 from django.utils import timezone
 
 from rest_framework import status
-from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSet,ModelViewSet
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -12,7 +11,7 @@ from assign.models import AssignLog
 from accounts.models import CustomUser
 from accounts.mixins import TokenAuthRequiredMixin
 from device.serializer import DeviceSerializer,DeviceLogSerializer
-from assign.serializer import AssignLogSerializer
+
 
 
 # Create your views here.
@@ -33,7 +32,7 @@ class DeviceViewset(TokenAuthRequiredMixin,ModelViewSet):
 class DeviceActionViewSet(TokenAuthRequiredMixin,ViewSet):
     queryset = Device.objects.all()
     
-    #take device user_id must be request.id
+
     @action(detail=False, methods=['post'])
     def take_device(self, request):
         device_id = request.data.get('device')
@@ -63,9 +62,7 @@ class DeviceActionViewSet(TokenAuthRequiredMixin,ViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
     
-    
 
-    #must implement req.user==user_id then only permit to return device
     @action(detail=False,methods=['post'])
     def return_device(self, request):
         device_id = request.data.get('device')
